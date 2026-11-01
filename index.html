@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Наше приложение 💖</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <div class="container">
+    <div id="auth-screen" class="card">
+      <h2>Добро пожаловать 💌</h2>
+      
+      <div class="tabs">
+        <button id="tab-create" class="active" onclick="switchTab('create')">Создать пару</button>
+        <button id="tab-join" onclick="switchTab('join')">Войти по коду</button>
+      </div>
+
+      <input type="email" id="email" placeholder="Ваш Email">
+      <input type="password" id="password" placeholder="Пароль">
+      <input type="text" id="invite-code" class="hidden" placeholder="Введите код приглашения">
+
+      <button id="auth-btn" onclick="handleAuth()">Создать пару</button>
+      <button class="secondary-btn" onclick="handleLoginOnly()">Уже есть аккаунт? Войти</button>
+
+      <p id="auth-error" class="error"></p>
+      <div id="code-result" class="code-box hidden"></div>
+    </div>
+
+    <div id="main-screen" class="card hidden">
+      <h1>Мы вместе! 💞</h1>
+      <p>Добро пожаловать в наше личное пространство.</p>
+      <button onclick="signOut()">Выйти</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,6 +1,5 @@
-// Подставляем данные вашего проекта Supabase
-const SUPABASE_URL = 'ВАШ_PROJECT_URL';
-const SUPABASE_ANON_KEY = 'ВАШ_ANON_KEY';
+const SUPABASE_URL = 'https://ebhdmlzekdxeryyfzitd.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_Z2l0aHViLW9hdXRoMnx8OTgyNzY4MjM0MTIzNDU2Nzg5';
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -40,30 +39,24 @@ async function handleAuth() {
 
   try {
     if (authMode === 'create') {
-      // 1. Регистрируем пользователя
       const { data: signUpData, error: signUpError } = await supabaseClient.auth.signUp({ email, password });
       if (signUpError) throw signUpError;
       
       const userId = signUpData.user.id;
-
-      // 2. Генерируем случайный 6-значный инвайт-код
       const newCode = Math.random().toString(36).substring(2, 8).toUpperCase();
 
-      // 3. Создаем запись в таблице couples
       const { error: coupleError } = await supabaseClient
         .from('couples')
         .insert([{ user1_id: userId, invite_code: newCode }]);
 
       if (coupleError) throw coupleError;
 
-      // Показываем код пользователю
       document.getElementById('auth-screen').classList.add('hidden');
       const codeResult = document.getElementById('code-result');
       codeResult.classList.remove('hidden');
       codeResult.innerHTML = `<p>Ваш код приглашения:</p><h3>${newCode}</h3><p style="font-size:12px; color:#666;">Отправьте его парню, чтобы он ввел его при входе!</p>`;
 
     } else {
-      // Режим входа по инвайт-коду
       if (!inviteCodeInput) {
         errorEl.textContent = 'Введите код приглашения!';
         return;
@@ -74,7 +67,6 @@ async function handleAuth() {
 
       const userId = signInData.user.id;
 
-      // Ищем пару с таким кодом
       const { data: coupleData, error: coupleQueryError } = await supabaseClient
         .from('couples')
         .select('*')
@@ -85,7 +77,6 @@ async function handleAuth() {
         throw new Error('Пара с таким кодом не найдена');
       }
 
-      // Привязываем второго пользователя
       const { error: updateError } = await supabaseClient
         .from('couples')
         .update({ user2_id: userId })
